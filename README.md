@@ -110,6 +110,18 @@ Example for training is provided in [`ExampleTrain.ipynb`](ExampleTrain.ipynb).
 Example for inference is provided in [`Example.ipynb`](Example.ipynb). It can be used with our pretrained RL agents provided under `earli/pretrained_models/`, or with a new trained agent.
 
 
+### Paper's hyper-parameters
+
+In the [paper](https://arxiv.org/abs/2504.06126), the RL agent was trained via curriculum learning over problem sizes, starting from problem instances of 50 nodes and increasing gradaully up to 500, using the following curriculum schedule and hyper-parameters from `config_train.yaml`:
+
+| Phase | Train problem size | `epochs` | `learning_rate` | `data_steps_per_epoch` | `unused_capacity_penalty` | `pretrained_fname` | `save_model_path` |
+| :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| #1 | 50 | `4000` | `3e-4` | 1024 | 0 | `null` | `earli/pretrained_models/vrp_50.m` |
+| #2 | 100 | `1000` | `2.5e-4` | 1024 | 0 | `earli/pretrained_models/vrp_50.m` | `earli/pretrained_models/vrp_100.m` |
+| #3 | 200 | `800` | `1.5e-4` | 512 | 8 | `earli/pretrained_models/vrp_100.m` | `earli/pretrained_models/vrp_200.m` |
+| #4 | 500 | `300` | `0.5e-4` | 256 | 10 | `earli/pretrained_models/vrp_200.m` | `earli/pretrained_models/vrp_500.m` |
+
+
 # Data
 
 The data of problem instances - for either training or inference - should be stored in a `pickle` file that contains a python dictionary with the following fields:
