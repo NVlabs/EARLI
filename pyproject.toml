@@ -46,7 +46,7 @@ dependencies = [
 
   # build helper + your HGS repo
   "ninja>=1.11",
-  "hygese @ git+https://gitlab.com/igreenberg/initializable_hgs.git",
+  "hygese @ git+https://gitlab.com/igreenberg/initializable_hgs.git@861042ecdb0d0d992f6f063252aac78a9af1abd5",
 ]
 
 [project.urls]
