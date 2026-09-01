@@ -22,11 +22,12 @@ import wandb
 from .utils import analysis_utils as utils
 from .utils import evaluation_utils as eval_utils
 from .utils.nv import verify_consistent_config
+from .utils.safe_serialization import safe_pickle_load
 
 
 def load_problems(problems_path, problems_range, config):
     with open(problems_path, 'rb') as hh:
-        problems = pkl.load(hh)
+        problems = safe_pickle_load(hh)
     problem_size = problems['distance_matrix'].shape[-1]
     radius = np.max(np.abs(problems['positions']))
     if config['cuopt']['normalization'] is None:
@@ -115,7 +116,7 @@ def get_initial_solutions(config, problems, problems_range, METHODS, SOLUTION_PA
 
 def load_solutions_from_path(fpath, post_ls_solutions=True):
     with open(fpath, 'rb') as hh:
-        pp = pkl.load(hh)
+        pp = safe_pickle_load(hh)
 
     # extract solutions
     keys_priority = ['all_routes', 'top_k_paths']

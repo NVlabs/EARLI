@@ -23,6 +23,7 @@ from .models.attention_model import PosAttentionModel
 from .models.sampler import Sampler
 from .self_play import optimize_torch, SelfPlay
 from .utils import analysis_utils, evaluation_utils
+from .utils.safe_serialization import safe_torch_load
 from .utils.nv import seed_all, printable_time, find_largest_common_prefixes
 
 
@@ -478,7 +479,7 @@ class Evaluator(object):
         if self.use_fabric:
             checkpoint = self.fabric.load(filename)
         else:
-            checkpoint = torch.load(filename, weights_only=False)
+            checkpoint = safe_torch_load(filename)
         iter_data = None
         if 'model_state_dict' in checkpoint:  # new file format
             model_params = checkpoint['model_state_dict']

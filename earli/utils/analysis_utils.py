@@ -2,8 +2,9 @@
 # SPDX-License-Identifier: MIT
 
 import collections
-import pickle as pkl
 import warnings
+
+from .safe_serialization import safe_pickle_load
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
@@ -160,7 +161,7 @@ def tw_analysis(test_paths, positions, norm=1):
     waiting_times = []
     for method, test_path in test_paths.items():
         with open(test_path['problems_path'], 'rb') as hh:
-            problem_data = pkl.load(hh)
+            problem_data = safe_pickle_load(hh)
         for i, path in enumerate(test_path['path']):
             hds = [p[0] for p in path]
             xy = positions[i][hds, :]

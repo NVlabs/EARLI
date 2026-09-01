@@ -3,9 +3,10 @@
 
 import logging
 import os
-import pickle
 import torch
 import numpy as np
+
+from .utils.safe_serialization import safe_pickle_load
 
 # Removed: shutil, traceback, uuid, warnings, defaultdict, cudf, wandb, cuOpt imports
 # Removed: DEFAULT_FIX_CAPACITY, DEFAULT_CAPACITIES, DEPOT_LOCATION, RESET_LOCATION, UNMASKED_INDEX
@@ -40,7 +41,7 @@ class ProblemLoader(object):
 
         logging.info(f'Loading data from {fname}')
         with open(fname, 'rb') as f:
-            loaded_data_pkl = pickle.load(f)
+            loaded_data_pkl = safe_pickle_load(f)
 
         data = {}
 

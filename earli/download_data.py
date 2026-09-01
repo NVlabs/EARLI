@@ -12,12 +12,16 @@ The file contains VRP problem instances of various sizes (20-500 nodes) for Rio 
 """
 
 import argparse
+import hashlib
 import os
 import sys
 import zipfile
 from pathlib import Path
 import requests
 from tqdm import tqdm
+
+# problem_instances.zip as of olist-vrp-benchmark commit 4f7ec0b (pinned below)
+EXPECTED_SHA256 = "2b26dc0b51b9b8c4120f59f0cf9f28cd4f4edefaccda36208b71d87ee12d9d90"
 
 
 def download_file(url, destination, chunk_size=8192):
@@ -50,12 +54,34 @@ def download_file(url, destination, chunk_size=8192):
         return False
 
 
+def verify_sha256(file_path, expected):
+    """Check the file's SHA256 digest against the pinned value."""
+    digest = hashlib.sha256()
+    with open(file_path, 'rb') as f:
+        for chunk in iter(lambda: f.read(1024 * 1024), b''):
+            digest.update(chunk)
+    if digest.hexdigest() != expected:
+        print(f"Error: SHA256 mismatch for {file_path}")
+        print(f"  expected: {expected}")
+        print(f"  actual:   {digest.hexdigest()}")
+        print("The file may be corrupted or tampered with; it will not be extracted.")
+        return False
+    return True
+
+
 def extract_zip(zip_path, extract_to):
     """Extract zip file to destination directory."""
     print(f"Extracting {zip_path} to {extract_to}")
-    
+
     try:
         with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+            # Reject entries that would land outside extract_to (Zip Slip)
+            extract_root = Path(extract_to).resolve()
+            for member in zip_ref.namelist():
+                target = (extract_root / member).resolve()
+                if not target.is_relative_to(extract_root):
+                    print(f"Error: zip entry escapes extraction directory: {member}")
+                    return False
             zip_ref.extractall(extract_to)
         
         print(f"Successfully extracted to {extract_to}")
@@ -92,8 +118,8 @@ def main(argv=None):
     
     args = parser.parse_args(argv)
     
-    # URLs for the data
-    base_url = "https://github.com/NVlabs/olist-vrp-benchmark/raw/main"
+    # URLs for the data, pinned to the commit matching EXPECTED_SHA256
+    base_url = "https://github.com/NVlabs/olist-vrp-benchmark/raw/4f7ec0b2f33fd013199c982878e491aff5e7baaf"
     zip_filename = "problem_instances.zip"
     zip_url = f"{base_url}/{zip_filename}"
     
@@ -121,7 +147,11 @@ def main(argv=None):
         success = download_file(zip_url, zip_path)
         if not success:
             sys.exit(1)
-    
+
+    # Verify integrity before extracting
+    if not verify_sha256(zip_path, EXPECTED_SHA256):
+        sys.exit(1)
+
     # Extract the zip file
     success = extract_zip(zip_path, datasets_dir)
     if not success:

@@ -277,4 +277,4 @@ dependencies:
       - xyzservices==2025.4.0
       - zict==3.0.0
       - zipp==3.23.0
-      - git+https://gitlab.com/igreenberg/initializable_hgs.git
+      - git+https://gitlab.com/igreenberg/initializable_hgs.git@861042ecdb0d0d992f6f063252aac78a9af1abd5
