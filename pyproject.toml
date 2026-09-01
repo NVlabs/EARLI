@@ -42,7 +42,7 @@ dependencies = [
   "wandb==0.22.1",
 
   # cuOpt SDK — align to env.yaml (25.8.*) and let it pull RAPIDS/CUDA bits
-  "cuopt-cu12==25.8.*",
+  "cuopt-cu12>=25.8,<25.12",
 
   # build helper + your HGS repo
   "ninja>=1.11",
