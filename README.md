@@ -1,7 +1,7 @@
 # EARLI: Evolutionary Algorithm with RL Initialization
 *a cuOpt‑powered combinatorial optimization framework*
 
-EARLI is a hybrid framework for solving the Vehicle Routing Problem (VRP). It uses Reinforcement Learning (RL) to learn to quickly generate high-quality solutions; then uses these as the initial population of a Genetic Algorithm (GA). The RL initialization enables leveraging of data for generalization across problems and acceleration of solving new instances. The GA search leverages inference time to refine the solution iteratively. Together, EARLI accelerates the time to find state-of-the-art solutions to VRP instances. More details are available in the paper [***Accelerating Vehicle Routing via AI-Initialized Genetic Algorithms***](https://arxiv.org/abs/2504.06126).
+EARLI is a hybrid framework for solving the Vehicle Routing Problem (VRP). It uses Reinforcement Learning (RL) to learn to quickly generate high-quality solutions; then uses these as the initial population of a Genetic Algorithm (GA). The RL initialization enables leveraging of data for generalization across problems and acceleration of solving new instances. The GA search leverages inference time to refine the solution iteratively. Together, EARLI accelerates the time to find state-of-the-art solutions to VRP instances. More details are available in the paper [***Reinforcement learning for initializing genetic algorithms in vehicle routing***](https://www.nature.com/articles/s44488-026-00019-7) (Communications AI & Computing, 2026).
 
 This repo integrates EARLI's framework with NVIDIA's cuOpt genetic algorithm solver.
 The repo includes:
@@ -112,7 +112,7 @@ Example for inference is provided in [`Example.ipynb`](Example.ipynb). It can be
 
 ### Paper's hyper-parameters
 
-In the [paper](https://arxiv.org/abs/2504.06126), the RL agent was trained via curriculum learning over problem sizes, starting from problem instances of 50 nodes and increasing gradaully up to 500, using the following curriculum schedule and hyper-parameters from `config_train.yaml`:
+In the [paper](https://www.nature.com/articles/s44488-026-00019-7), the RL agent was trained via curriculum learning over problem sizes, starting from problem instances of 50 nodes and increasing gradaully up to 500, using the following curriculum schedule and hyper-parameters from `config_train.yaml`:
 
 | Phase | Train problem size | `epochs` | `learning_rate` | `data_steps_per_epoch` | `unused_capacity_penalty` | `pretrained_fname` | `save_model_path` |
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
@@ -143,7 +143,7 @@ This downloads into `./datasets/` VRP problems based on real Brazilian e-commerc
 
 The training example in the notebook uses Stable-Baselines VecEnv API, enabling both an efficient vectoric environment and the standard SB3 algorithms. To use this API, in `config.yaml`, `compatibility_mode` should be set to `stable_baselines`. We support two additional APIs:
 1. `gym`: The standard non-vectoric Gym API (>0.27).
-2. `null`: The API used in our [paper](https://arxiv.org/abs/2504.06126), enabling both our custom PPO implementation and K-beam solution generation. This mode is necessary for generating $K>1$ solutions on inference.
+2. `null`: The API used in our [paper](https://www.nature.com/articles/s44488-026-00019-7), enabling both our custom PPO implementation and K-beam solution generation. This mode is necessary for generating $K>1$ solutions on inference.
 
 By default, we recommend mode `stable_baselines` for training and `null` for inference.
 
@@ -178,14 +178,18 @@ By default, we recommend mode `stable_baselines` for training and `null` for inf
 
 # Cite Us
 
-This repo is published by NVIDIA as part of the paper ***Accelerating Vehicle Routing via AI-Initialized Genetic Algorithms***.
+This repo is published by NVIDIA as part of the paper [***Reinforcement learning for initializing genetic algorithms in vehicle routing***](https://www.nature.com/articles/s44488-026-00019-7), Communications AI & Computing 1, 17 (2026).
 To cite:
 
 ```
-@article{EARLI25,
-  title={Accelerating Vehicle Routing via AI-Initialized Genetic Algorithms},
+@article{EARLI26,
+  title={Reinforcement learning for initializing genetic algorithms in vehicle routing},
   author={Greenberg, Ido and Sielski, Piotr and Linsenmaier, Hugo and Gandham, Rajesh and Mannor, Shie and Fender, Alex and Chechik, Gal and Meirom, Eli},
-  journal={arXiv preprint},
-  year={2025}
+  journal={Communications AI \& Computing},
+  volume={1},
+  number={1},
+  pages={17},
+  year={2026},
+  doi={10.1038/s44488-026-00019-7}
 }
 ```
